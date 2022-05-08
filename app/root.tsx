@@ -7,6 +7,7 @@ import {
   Scripts,
   ScrollRestoration
 } from '@remix-run/react'
+import { AppProvider } from './provider/app'
 import style from './styles.css'
 
 export const meta: MetaFunction = () => ({
@@ -29,7 +30,9 @@ export default function App() {
         <Links />
       </head>
       <body className="font-inter bg-white dark:bg-gray-800">
-        <Outlet />
+        <AppProvider>
+          <Outlet />
+        </AppProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
