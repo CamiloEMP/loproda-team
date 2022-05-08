@@ -7,11 +7,9 @@ export default function Index() {
   return (
     <>
     <Navbar />
-    <div>
-      <Button onClick={() => {
-        setTheme(theme === 'light' ? 'dark': 'light')
-      }}>dasd</Button>
-    </div>
+    <main>
+      pagina de presentacion
+    </main>
     </>
   )
 }
