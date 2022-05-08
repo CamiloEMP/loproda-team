@@ -17,9 +17,7 @@ export const meta: MetaFunction = () => ({
 })
 
 export const links: LinksFunction = () => {
-  return [
-    { href: style, rel: "stylesheet"}
-  ]
+  return [{ href: style, rel: 'stylesheet' }]
 }
 
 export default function App() {
@@ -35,7 +33,7 @@ export default function App() {
         </AppProvider>
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
+        {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
     </html>
   )
