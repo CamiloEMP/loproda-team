@@ -1,6 +1,7 @@
 import { Link } from "@remix-run/react"
 import { Button, Navbar as NavbarContainer } from "flowbite-react"
 import { QuestionMarkCircleIcon } from '@heroicons/react/outline'
+import { Logo } from "./logo"
 
 export function Navbar(): JSX.Element {
   return (
@@ -9,11 +10,9 @@ export function Navbar(): JSX.Element {
         <Link
           to="/"
           className="flex items-center"
-          aria-label="Google Meet Inicio"
+          aria-label="Lorpoda Team Inicio"
         >
-          <span role="img" className="mr-3 h-6 sm:h-9 select-none">
-            title
-          </span>
+          <Logo />
         </Link>
         <div className="flex items-center gap-2">
           <Button icon={QuestionMarkCircleIcon} color="light" pill />
