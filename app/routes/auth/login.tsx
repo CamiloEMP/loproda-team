@@ -1,41 +1,41 @@
 import { Logo } from '~/components/logo'
-import { Form, Link, useActionData } from '@remix-run/react'
-import { Alert, Button } from 'flowbite-react'
+import { Form, Link, useTransition, useSearchParams } from '@remix-run/react'
+import { Alert, Button, Spinner } from 'flowbite-react'
 import { LockClosedIcon, MailIcon } from '@heroicons/react/outline'
 import { InformationCircleIcon } from '@heroicons/react/solid'
 import { Card } from '~/components/ui/card'
-import type { ActionFunction } from '@remix-run/node'
-import { json } from '@remix-run/node'
+import type { ActionFunction, MetaFunction } from '@remix-run/node'
 import { authenticator } from '~/auth.server'
 
-export const action: ActionFunction = async ({ request }) => {
-  try {
-    await authenticator.authenticate('sb', request)
-    return json({
-      signin: true
-    })
-  } catch {
-    return json({
-      error: true
-    })
+export const meta: MetaFunction = () => {
+  return {
+    title: 'Iniciar Sesion',
+    description: 'Inicia sesion en tu cuenta de team.loproda.com'
   }
 }
 
+export const action: ActionFunction = async ({ request }) => {
+  return await authenticator.authenticate('sb', request, {
+    successRedirect: '/',
+    failureRedirect: '/auth/login?auth_fall=true'
+  })
+}
+
 export default function Logup(): JSX.Element {
-  const data = useActionData()
+  const [search] = useSearchParams()
+  const transition = useTransition()
 
   return (
     <main className="h-full w-full pt-4 px-4 flex flex-col items-center gap-4 overflow-x-auto">
       <Logo />
       <h1 className="text-2xl dark:text-white">Iniciar Sesion</h1>
       <Card className="w-full md:w-fit">
-        <Alert color="red" Icon={InformationCircleIcon}>
-          <span>
-            <span className="font-medium">Info alert!</span> Change a few things
-            up and try submitting again.
-          </span>
-        </Alert>
         <Form method="post" className="flex flex-col gap-4 md:w-96">
+          {search.has('auth_fall') && (
+            <Alert color="red" Icon={InformationCircleIcon}>
+              <span>El Correo Electronico o la contraseña son invalidos</span>
+            </Alert>
+          )}
           <div>
             <label
               htmlFor="email"
@@ -78,7 +78,14 @@ export default function Logup(): JSX.Element {
               />
             </div>
           </div>
-          <Button type="submit" className="!w-full block">
+          <Button
+            type="submit"
+            className="!w-full block"
+            disabled={transition.state === 'submitting'}
+          >
+            {transition.state === 'submitting' && (
+              <Spinner color="blue" size="sm" className="mr-2" />
+            )}{' '}
             Iniciar Sesion
           </Button>
           <p className="text-center text-sm text-gray-500">
