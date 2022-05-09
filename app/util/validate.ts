@@ -1,3 +1,5 @@
+/* eslint-disable no-useless-escape */
+/* eslint-disable no-empty-character-class */
 export const validate = {
   name: { required: true, minLength: 4 },
   email: {
