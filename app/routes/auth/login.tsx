@@ -1,37 +1,41 @@
 import { Logo } from '~/components/logo'
-import { Link } from '@remix-run/react'
-import { Button } from 'flowbite-react'
-import { validate } from '~/util/validate'
-import { useForm } from 'react-hook-form'
+import { Form, Link, useActionData } from '@remix-run/react'
+import { Alert, Button } from 'flowbite-react'
 import { LockClosedIcon, MailIcon } from '@heroicons/react/outline'
+import { InformationCircleIcon } from '@heroicons/react/solid'
 import { Card } from '~/components/ui/card'
+import type { ActionFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
+import { authenticator } from '~/auth.server'
 
-interface LoginForm {
-  email: string
-  password: string
+export const action: ActionFunction = async ({ request }) => {
+  try {
+    await authenticator.authenticate('sb', request)
+    return json({
+      signin: true
+    })
+  } catch {
+    return json({
+      error: true
+    })
+  }
 }
 
 export default function Logup(): JSX.Element {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<LoginForm>()
+  const data = useActionData()
 
-  const onSubmit = (data: LoginForm) => {
-    if (Object.keys(errors).length === 0) {
-      console.log('send', data)
-    }
-  }
   return (
     <main className="h-full w-full pt-4 px-4 flex flex-col items-center gap-4 overflow-x-auto">
       <Logo />
       <h1 className="text-2xl dark:text-white">Iniciar Sesion</h1>
       <Card className="w-full md:w-fit">
-        <form
-          className="flex flex-col gap-4 md:w-96"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <Alert color="red" Icon={InformationCircleIcon}>
+          <span>
+            <span className="font-medium">Info alert!</span> Change a few things
+            up and try submitting again.
+          </span>
+        </Alert>
+        <Form method="post" className="flex flex-col gap-4 md:w-96">
           <div>
             <label
               htmlFor="email"
@@ -46,22 +50,12 @@ export default function Logup(): JSX.Element {
               <input
                 type="email"
                 id="email"
+                name="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="mi@email.com"
                 required
-                {...register('email', validate.email)}
               />
             </div>
-            {errors.email && (
-              <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                {errors.email.type === 'required'
-                  ? 'El campo es Requerido'
-                  : null}
-                {errors.email.type === 'pattern'
-                  ? `El Correo Electronico no es valido`
-                  : null}
-              </p>
-            )}
           </div>
           <div>
             <label
@@ -77,25 +71,15 @@ export default function Logup(): JSX.Element {
               <input
                 type="password"
                 id="password"
+                name="password"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="contraseña"
                 required
-                {...register('password', validate.password)}
               />
             </div>
-            {errors.password && (
-              <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                {errors.password.type === 'required'
-                  ? 'El campo es Requerido'
-                  : null}
-                {errors.password.type === 'minLength'
-                  ? `Minimo ${validate.password.minLength} caracteres`
-                  : null}
-              </p>
-            )}
           </div>
           <Button type="submit" className="!w-full block">
-            Resgitrate
+            Iniciar Sesion
           </Button>
           <p className="text-center text-sm text-gray-500">
             Si no tienes una cuenta.{' '}
@@ -107,7 +91,7 @@ export default function Logup(): JSX.Element {
               Registrate
             </Link>
           </p>
-        </form>
+        </Form>
       </Card>
     </main>
   )
