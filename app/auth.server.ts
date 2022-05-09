@@ -1,8 +1,8 @@
 import { createCookieSessionStorage } from '@remix-run/node'
 import { Authenticator, AuthorizationError } from 'remix-auth'
 import { SupabaseStrategy } from 'remix-auth-supabase'
-import type { Session } from '~/supabase.server'
-import { supabaseClient } from '~/supabase.server'
+import type { Session } from './supabase.server'
+import { supabaseClient } from './supabase.server'
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -35,16 +35,15 @@ export const supabaseStrategy = new SupabaseStrategy(
     if (typeof password !== 'string')
       throw new AuthorizationError('Password must be a string')
 
-    return supabaseClient.auth.api
-      .signInWithEmail(email, password)
-      .then(({ data, error }): Session => {
-        if (error || !data) {
+    return supabaseClient.auth
+      .signIn({ email, password })
+      .then(({ error, session }) => {
+        if (error || !session) {
           throw new AuthorizationError(
             error?.message ?? 'No user session found'
           )
         }
-
-        return data
+        return session
       })
   }
 )

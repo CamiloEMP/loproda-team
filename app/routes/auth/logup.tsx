@@ -10,25 +10,11 @@ import { redirect, json } from '@remix-run/node'
 import { supabaseClient as supabase } from '~/supabase.server'
 import * as Yup from 'yup'
 import { v4 } from 'uuid'
+import { getValidationErrors } from '~/util/getErrors.yup'
+import { formDataToJSON } from '~/util/formDataToJSON'
 
 const validateForm = async (formData: FormData) => {
-  const getValidationErrors = (err: any) => {
-    const validationErrors = {} as any
-
-    err.inner.forEach((error: any) => {
-      if (error.path) {
-        validationErrors[error.path] = error.message
-      }
-    })
-
-    return validationErrors
-  }
-
-  const formJSON: { [key: string]: any } = {}
-  for (const key of formData.keys()) {
-    formJSON[key] = formData.get(key)
-  }
-
+  const formJSON = formDataToJSON(formData)
   const projectSchema = Yup.object({
     name: Yup.string()
       .required('Es un campo obligatorio')
