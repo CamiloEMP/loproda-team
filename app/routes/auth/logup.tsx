@@ -5,7 +5,7 @@ import { Button, Spinner } from 'flowbite-react'
 import { validate } from '~/util/validate'
 import { LockClosedIcon, MailIcon, UserIcon } from '@heroicons/react/outline'
 import { Card } from '~/components/ui/card'
-import type { ActionFunction } from '@remix-run/node'
+import type { ActionFunction, MetaFunction } from '@remix-run/node'
 import { redirect, json } from '@remix-run/node'
 import { supabaseClient as supabase } from '~/supabase.server'
 import * as Yup from 'yup'
@@ -44,6 +44,13 @@ const validateForm = async (formData: FormData) => {
   }
 }
 
+export const meta: MetaFunction = () => {
+  return {
+    title: 'Registro de usuarios',
+    description: 'Registrate en team.loproda.com'
+  }
+}
+
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
   try {
@@ -55,8 +62,10 @@ export const action: ActionFunction = async ({ request }) => {
     const userProfile = await supabase.from('profiles').insert({
       id: user.user?.id,
       name,
+      lastname: '',
       avatar: '',
-      username: name.replace(/ /g, '') + v4()
+      username: name.replace(/ /g, '') + v4(),
+      active: false
     })
 
     if (userProfile.error) return json({ errors: { signupProfile: true } })
