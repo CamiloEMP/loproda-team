@@ -80,7 +80,9 @@ export default function Logup(): JSX.Element {
   const transition = useTransition()
   return (
     <main className="h-full w-full pt-4 px-4 flex flex-col items-center gap-4 overflow-x-auto">
-      <Logo />
+      <Link to="/">
+        <Logo />
+      </Link>
       <h1 className="text-2xl dark:text-white">Registrate</h1>
       <Card className="w-full md:w-fit">
         <Form method="post" className="flex flex-col gap-4 md:w-96">
