@@ -6,10 +6,10 @@
 Nace de una hackathon organizada por [@midudev en Twitch](https://www.twitch.tv/midudev), donde el reto es crear un clon de [Google Meet](https://meet.google.com/)
 
 ## Construido con
-- Remix js
-- Supabase js
-- Tailwind css
-- Flowbite
+- [Remix js](https://remix.run/)
+- [Supabase js](https://supabase.io/)
+- [Tailwind css](https://tailwindcss.com/)
+- [Flowbite](https://flowbite.com/)
 
 ## Requisitos previos
 - Una cuenta en [supabase.com](https://supabase.com/)
@@ -24,7 +24,10 @@ cd loproda-team
 3. Crea un archivo `.env`
 ```text
 SUPABASE_URL=
-SUPABASE_KEY=SUPABASE:ANON:KEY
+SUPABASE_KEY=
+
+TWILIO_ACCOUNT_SID=
+TWILIO_ACCOUNT_TOKEN=
 ```
 4. Instala las dependencias
 ```sh
