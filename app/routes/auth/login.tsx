@@ -38,6 +38,11 @@ export default function Logup(): JSX.Element {
               <span>El Correo Electronico o la contraseña son invalidos</span>
             </Alert>
           )}
+          {search.has('signout') && (
+            <Alert color="blue" Icon={InformationCircleIcon}>
+              <span>Se cerro la sesion con exito</span>
+            </Alert>
+          )}
           <div>
             <label
               htmlFor="email"
