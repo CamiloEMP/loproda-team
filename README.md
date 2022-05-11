@@ -28,6 +28,7 @@ SUPABASE_KEY=
 
 TWILIO_ACCOUNT_SID=
 TWILIO_ACCOUNT_TOKEN=
+TWILIO_API_KEY_SID=
 ```
 4. Instala las dependencias
 ```sh
