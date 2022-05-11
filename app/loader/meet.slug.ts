@@ -10,6 +10,7 @@ export interface meetSlugLoaderI
   room: boolean // existe la sala
   admin: boolean // el usuario es administrador
   inSesion: boolean // si la reunion esta en sesion (si ha iniciado)
+  access: boolean // si el usuario tiene acceso a la reunion
 }
 
 /**
@@ -23,6 +24,7 @@ export const meetSlugLoader: LoaderFunction = async ({ params, request }) => {
     auth: false,
     admin: false,
     inSesion: false,
+    access: false,
     name: '',
     avatar: '',
     username: ''
@@ -63,6 +65,7 @@ export const meetSlugLoader: LoaderFunction = async ({ params, request }) => {
 
   // 2.3 Verificar si el usuario tiene acceso a la reunion
   /** PENDIENTE */
+  data.access = data.admin
 
   // retornar datos segun la interface {meetSlugLoaderI}
   return json({ ...data })
