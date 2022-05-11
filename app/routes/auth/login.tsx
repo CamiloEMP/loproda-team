@@ -6,6 +6,7 @@ import { InformationCircleIcon } from '@heroicons/react/solid'
 import { Card } from '~/components/ui/card'
 import type { ActionFunction, MetaFunction } from '@remix-run/node'
 import { authenticator } from '~/auth.server'
+import { validate } from '~/util/validate'
 
 export const meta: MetaFunction = () => {
   return {
@@ -15,8 +16,19 @@ export const meta: MetaFunction = () => {
 }
 
 export const action: ActionFunction = async ({ request }) => {
+  const redirect = new URL(request.url)
+  const url = new URL('https://example.com')
+
+  if (
+    redirect.searchParams.has('redirect') &&
+    validate.urlPath.regex.test(redirect.searchParams.get('redirect') || '')
+  ) {
+    url.pathname = redirect.searchParams.get('redirect') || '/'
+    url.searchParams.set('ref', 'loginform')
+  }
+
   return await authenticator.authenticate('sb', request, {
-    successRedirect: '/',
+    successRedirect: url.pathname,
     failureRedirect: '/auth/login?auth_fall=true'
   })
 }
@@ -32,15 +44,33 @@ export default function Logup(): JSX.Element {
       </Link>
       <h1 className="text-2xl dark:text-white">Iniciar Sesion</h1>
       <Card className="w-full md:w-fit">
-        <Form method="post" className="flex flex-col gap-4 md:w-96">
-          {search.has('auth_fall') && (
-            <Alert color="red" Icon={InformationCircleIcon}>
-              <span>El Correo Electronico o la contraseña son invalidos</span>
-            </Alert>
-          )}
+        <Form
+          method="post"
+          action={
+            `/auth/login` +
+            (search.has('redirect') &&
+            validate.urlPath.regex.test(search.get('redirect') || '')
+              ? `?redirect=${search.get('redirect')}`
+              : '')
+          }
+          className="flex flex-col gap-4 md:w-96"
+        >
+          {search.has('redirect') &&
+            validate.urlPath.regex.test(search.get('redirect') || '') && (
+              <Alert color="blue" Icon={InformationCircleIcon}>
+                <span>
+                  Inicia Sesion para continuar a <b>{search.get('redirect')}</b>
+                </span>
+              </Alert>
+            )}
           {search.has('signout') && (
             <Alert color="blue" Icon={InformationCircleIcon}>
               <span>Se cerro la sesion con exito</span>
+            </Alert>
+          )}
+          {search.has('auth_fall') && (
+            <Alert color="red" Icon={InformationCircleIcon}>
+              <span>El Correo Electronico o la contraseña son invalidos</span>
             </Alert>
           )}
           <div>
