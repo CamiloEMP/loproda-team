@@ -6,3 +6,7 @@
 html, body {
   @apply h-full w-full;
 }
+
+.video-rounded > video {
+  @apply rounded-lg;
+}
