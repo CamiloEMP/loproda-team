@@ -5,15 +5,17 @@ import { MeetPreMeet } from '~/components/page/meet.premeet'
 import { useLoaderData } from '@remix-run/react'
 import { MeetInMetting } from '~/components/page/meet.meeting'
 import { VideoProvider } from '~/provider/video'
+import { MeetPost } from '~/components/page/meet.postmeet'
 
 export const loader: LoaderFunction = meetSlugLoader
 
 export default function MeetSlug(): JSX.Element {
   const loader = useLoaderData<meetSlugLoaderI>()
-  // return <MeetPreMeet loader={loader} />
   return (
     <VideoProvider>
+      <MeetPreMeet loader={loader} />
       <MeetInMetting />
+      <MeetPost />
     </VideoProvider>
   )
 }

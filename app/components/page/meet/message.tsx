@@ -83,9 +83,6 @@ export function JoinRoom({
         <h3 className="text-black dark:text-white text-2xl sm:text-4xl font-bold">
           ¿Listo para Unirte?
         </h3>
-        <p className="text-gray-600 dark:text-gray-400 sm:text-lg">
-          1 persona ya esta en la llamada
-        </p>
         <Button size="lg">Unirse</Button>
       </>
     )
