@@ -2,9 +2,11 @@ import {
   MicrophoneIcon,
   CameraIcon,
   CogIcon,
-  PhoneIcon
+  PhoneIcon,
+  ArrowsExpandIcon
 } from '@heroicons/react/outline'
 import classNames from 'classnames'
+import { Button } from 'flowbite-react'
 import { Logo } from '~/components/logo'
 
 interface MeetButtonProps {
@@ -42,11 +44,19 @@ export function MeetButton({
   )
 }
 
+function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen()
+  } else {
+    document.exitFullscreen()
+  }
+}
+
 export function MeetNavbar(): JSX.Element {
   return (
-    <nav className="bg-gray-700 px-4 py-2 rounded-lg relative flex justify-between items-center">
+    <nav className="bg-gray-700 p-4 rounded-lg relative flex justify-between items-center">
       <Logo />
-      <div className="flex gap-2.5">
+      <div className="flex gap-2.5 absolute left-1/2 -translate-x-1/2">
         <MeetButton icon={<CameraIcon className="w-5 h-5" />} active={true} />
         <MeetButton
           icon={<MicrophoneIcon className="w-5 h-5" />}
@@ -61,7 +71,13 @@ export function MeetNavbar(): JSX.Element {
           large
         />
       </div>
-      <div></div>
+      <div>
+        <Button
+          icon={ArrowsExpandIcon}
+          color="light"
+          onClick={() => toggleFullScreen()}
+        />
+      </div>
     </nav>
   )
 }

@@ -20,7 +20,7 @@ interface setMediaLocalI {
 export function useMediaLocal(): useMediaLocalR {
   const [video, setVideo] = useState<LocalVideoTrack>()
   const [audio, setAudio] = useState<LocalAudioTrack>()
-  const [output, setOutput] = useState<LocalAudioTrack>()
+  const [output] = useState<LocalAudioTrack>()
   const [media, setMedia] = useState<MediaInfo>()
 
   async function setMediaLocal({ media }: setMediaLocalI) {
@@ -43,14 +43,12 @@ export function useMediaLocal(): useMediaLocalR {
         setMedia(d)
         const cam = localStorage.getItem('media.cam') || ''
         const mic = localStorage.getItem('media.mic') || ''
-        const out = localStorage.getItem('media.out') || ''
 
         const audioD =
           d.audio.find(x => x.deviceId === mic) ||
           d.audio.find(x => x.deviceId === 'default')
 
         const videoD = d.video.find(x => x.deviceId === cam) || d.video[0]
-        console.log(videoD)
 
         setMediaLocal({ media: audioD as InputDeviceInfo })
         setMediaLocal({ media: videoD as InputDeviceInfo })

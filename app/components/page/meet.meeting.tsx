@@ -1,10 +1,8 @@
 import { MeetNavbar } from './meet/navbar.meet'
 import classname from 'classnames'
 import { Video } from '../media/video.component'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { VideoParticipantProps } from '../media/types'
-import { isBrowser } from '~/util/isBrowser'
-import { createLocalAudioTrack, createLocalVideoTrack } from 'twilio-video'
 import { AudioDisplay } from '../media/audio.component'
 import { useVideoProvider } from '~/provider/video'
 
@@ -48,9 +46,9 @@ function MeetParticipant({
 }
 
 export function MeetInMetting(): JSX.Element {
-  const { audioLocal, videoLocal, mediaLocal } = useVideoProvider()
+  const { audioLocal, videoLocal } = useVideoProvider()
   const [participants] = useState(10)
-  console.log(mediaLocal)
+
   return (
     <main className="w-full h-full bg-gray-800 p-4 dark flex flex-col gap-4">
       <div className="flex-1 min-h-0 grid grid-cols-6 grid-rows-6 gap-2 relative">
@@ -66,7 +64,12 @@ export function MeetInMetting(): JSX.Element {
         </div>
         <div className="col-span-1 row-span-6 flex flex-col gap-4 overflow-auto rounded-lg">
           {Array.from({ length: participants }).map((_, i) => (
-            <MeetParticipant name="unicornio" key={`meet-participant-${i}`} />
+            <MeetParticipant
+              name="unicornio"
+              key={`meet-participant-${i}`}
+              audio={audioLocal}
+              video={videoLocal}
+            />
           ))}
         </div>
       </div>
