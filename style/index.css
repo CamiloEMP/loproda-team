@@ -8,6 +8,11 @@ body {
   @apply h-full w-full;
 }
 
-.video-rounded>video {
-  @apply rounded-lg w-full h-full;
+.video-rounded {
+  @apply w-auto h-full mx-auto;
 }
+
+.video-rounded > video {
+  @apply rounded-lg w-full h-full inset-0;
+}
+
