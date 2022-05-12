@@ -6,6 +6,7 @@ import type { VideoParticipantProps } from '../media/types'
 import { isBrowser } from '~/util/isBrowser'
 import { createLocalAudioTrack, createLocalVideoTrack } from 'twilio-video'
 import { AudioDisplay } from '../media/audio.component'
+import { useVideoProvider } from '~/provider/video'
 
 interface MeetParticipantProps extends Partial<VideoParticipantProps> {
   owner?: boolean
@@ -47,44 +48,25 @@ function MeetParticipant({
 }
 
 export function MeetInMetting(): JSX.Element {
-  const [participants] = useState(5)
-
-  const [video, setVideo] = useState<VideoParticipantProps['video']>()
-  const [audio, setAudio] = useState<VideoParticipantProps['audio']>()
-
-  useEffect(() => {
-    if (isBrowser()) {
-      createLocalVideoTrack().then(v => setVideo(v))
-      createLocalAudioTrack().then(a => setAudio(a))
-    }
-  }, [])
-
+  const { audioLocal, videoLocal, mediaLocal } = useVideoProvider()
+  const [participants] = useState(10)
+  console.log(mediaLocal)
   return (
     <main className="w-full h-full bg-gray-800 p-4 dark flex flex-col gap-4">
       <div className="flex-1 min-h-0 grid grid-cols-6 grid-rows-6 gap-2 relative">
         <div className="col-span-5 row-span-6 relative">
+          <MeetParticipant name="unicornio focus" focus />
           <MeetParticipant
             name="unicornio focus"
-            audio={audio}
-            video={video}
-            focus
-          />
-          <MeetParticipant
-            name="unicornio focus"
-            audio={audio}
-            video={video}
+            audio={audioLocal}
+            video={videoLocal}
             focus
             owner
           />
         </div>
         <div className="col-span-1 row-span-6 flex flex-col gap-4 overflow-auto rounded-lg">
           {Array.from({ length: participants }).map((_, i) => (
-            <MeetParticipant
-              name="unicornio"
-              audio={audio}
-              video={video}
-              key={`meet-participant-${i}`}
-            />
+            <MeetParticipant name="unicornio" key={`meet-participant-${i}`} />
           ))}
         </div>
       </div>
