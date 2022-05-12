@@ -3,10 +3,11 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
+html,
+body {
   @apply h-full w-full;
 }
 
-.video-rounded > video {
-  @apply rounded-lg;
+.video-rounded>video {
+  @apply rounded-lg w-full h-full;
 }
