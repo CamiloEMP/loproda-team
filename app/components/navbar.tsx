@@ -18,6 +18,7 @@ interface NavbarProps {
     username: string
     avatar: string
   }
+  redirect?: string
 }
 
 function NavbarAuth({ user }: NavbarProps): JSX.Element {
@@ -71,15 +72,17 @@ function NavbarAuth({ user }: NavbarProps): JSX.Element {
   )
 }
 
-function NavbarNoAuth(): JSX.Element {
+function NavbarNoAuth({
+  redirect
+}: Pick<NavbarProps, 'redirect'>): JSX.Element {
   return (
     <>
-      <Link to="/auth/logup">
+      <Link to={`/auth/logup` + (redirect ? `?redirect=${redirect}` : '')}>
         <Button size="sm" color="light" tabIndex={-1}>
           Registrate
         </Button>
       </Link>
-      <Link to="/auth/login">
+      <Link to={`/auth/login` + (redirect ? `?redirect=${redirect}` : '')}>
         <Button size="sm" tabIndex={-1}>
           Iniciar Sesion
         </Button>
@@ -88,7 +91,7 @@ function NavbarNoAuth(): JSX.Element {
   )
 }
 
-export function Navbar({ user }: NavbarProps): JSX.Element {
+export function Navbar({ user, redirect }: NavbarProps): JSX.Element {
   return (
     <NavbarContainer rounded={false} fluid={!!user}>
       <div
@@ -108,7 +111,11 @@ export function Navbar({ user }: NavbarProps): JSX.Element {
           <Logo />
         </Link>
         <div className="flex items-center gap-2">
-          {user ? <NavbarAuth user={user} /> : <NavbarNoAuth />}
+          {user ? (
+            <NavbarAuth user={user} />
+          ) : (
+            <NavbarNoAuth redirect={redirect} />
+          )}
         </div>
       </div>
     </NavbarContainer>

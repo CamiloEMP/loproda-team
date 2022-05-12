@@ -14,7 +14,7 @@ export enum VideoRoomStatus {
 export const newLoader: LoaderFunction = async ({ request }) => {
   // 1 verificar la sesion
   const session = await authenticator.isAuthenticated(request)
-  if (!session) return redirect('/auth/login')
+  if (!session) return redirect('/auth/login?redirect=/new')
 
   // 2 Retornar el usuario
   const { data } = await supabaseClient

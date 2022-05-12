@@ -1,5 +1,5 @@
 <div align="center">
-  <h1 align="center">Loprodat team</h1>
+  <h1 align="center">Loproda team</h1>
 </div>
 
 ## Acerca del proyecto
@@ -28,6 +28,7 @@ SUPABASE_KEY=
 
 TWILIO_ACCOUNT_SID=
 TWILIO_ACCOUNT_TOKEN=
+TWILIO_API_KEY_SID=
 ```
 4. Instala las dependencias
 ```sh
