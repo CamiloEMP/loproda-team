@@ -52,7 +52,6 @@ export default function App() {
           </AppProvider>
           <ScrollRestoration />
           <Scripts />
-          {process.env.NODE_ENV === 'development' && <LiveReload />}
         </body>
       </html>
     </Provider>

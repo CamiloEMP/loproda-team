@@ -38,6 +38,7 @@
     "@remix-run/dev": "^1.4.3",
     "@remix-run/eslint-config": "^1.4.3",
     "@remix-run/serve": "^1.4.3",
+    "@tailwindcss/aspect-ratio": "^0.4.0",
     "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.9",
     "@types/uuid": "^8.3.4",
