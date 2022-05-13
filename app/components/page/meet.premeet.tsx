@@ -10,13 +10,39 @@ import { BoxLogo, JoinRoom } from './meet/message'
 
 interface MeetPreMeetProps {
   loader: meetSlugLoaderI
+  slug: string
 }
 
-export function MeetPreMeet({ loader }: MeetPreMeetProps): JSX.Element {
+export function MeetPreMeet({ loader, slug }: MeetPreMeetProps): JSX.Element {
   const { name, avatar, username } = loader
 
   const [video, setVideo] = useState<VideoParticipantProps['video']>()
   const [audio, setAudio] = useState<VideoParticipantProps['audio']>()
+  const [camIsActive, setCamIsActive] = useState(true)
+  const [audioIsActive, setAudioIsActive] = useState(true)
+
+  function handleVideo() {
+    if (camIsActive) {
+      video?.stop()
+      setCamIsActive(false)
+    } else {
+      video?.restart()
+      setCamIsActive(true)
+    }
+  }
+
+  function handleAudio() {
+    if (audio) {
+      audio.stop()
+      setAudio(undefined)
+      setAudioIsActive(false)
+    } else {
+      createLocalAudioTrack().then(track => {
+        setAudio(track)
+      })
+      setAudioIsActive(true)
+    }
+  }
 
   useEffect(() => {
     if (isBrowser()) {
@@ -34,15 +60,18 @@ export function MeetPreMeet({ loader }: MeetPreMeetProps): JSX.Element {
             audio={audio as VideoParticipantProps['audio']}
           >
             <div className="absolute bottom-2 flex justify-center gap-4 z-50">
-              <BoxLogo>
+              <BoxLogo isActive={camIsActive} onClick={handleVideo}>
                 <CameraIcon className="w-8 h-8 p-1 sm:w-12 sm:h-12 sm:p-2 text-white" />
               </BoxLogo>
-              <BoxLogo>
+              <BoxLogo isActive={audioIsActive} onClick={handleAudio}>
                 <MicrophoneIcon className="w-8 h-8 p-1 sm:w-12 sm:h-12 sm:p-2 text-white" />
               </BoxLogo>
-              <BoxLogo>
+              {/* <div
+                role="button"
+                className="bg-gray-800 flex items-center justify-center rounded-full p-2"
+              >
                 <CogIcon className="w-8 h-8 p-1 sm:w-12 sm:h-12 sm:p-2 text-white" />
-              </BoxLogo>
+              </div> */}
             </div>
           </VideoParticipant>
         </div>
@@ -50,7 +79,7 @@ export function MeetPreMeet({ loader }: MeetPreMeetProps): JSX.Element {
           aria-label="meet-action"
           className="w-full md:w-2/4 flex flex-col items-center gap-4 p-4"
         >
-          <JoinRoom {...loader} />
+          <JoinRoom slug={slug} {...loader} />
         </div>
       </div>
     </div>

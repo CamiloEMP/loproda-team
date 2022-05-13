@@ -1,13 +1,29 @@
+import { Form } from '@remix-run/react'
 import { Button, Label, TextInput } from 'flowbite-react'
 import type { meetSlugLoaderI } from '~/loader/meet.slug'
 
 interface BoxLogoProps {
   children: JSX.Element
   isActive?: boolean
+  onClick?: () => void
 }
 
-export function BoxLogo({ children, isActive }: BoxLogoProps): JSX.Element {
-  return <div className="bg-gray-800 rounded-full pointer">{children}</div>
+export function BoxLogo({
+  children,
+  isActive,
+  onClick
+}: BoxLogoProps): JSX.Element {
+  return (
+    <div
+      role="button"
+      onClick={onClick}
+      className={`${
+        isActive ? 'bg-gray-800' : 'bg-red-500'
+      } flex items-center justify-center rounded-full p-2`}
+    >
+      {children}
+    </div>
+  )
 }
 
 export function RequestAccess(): JSX.Element {
@@ -66,25 +82,36 @@ export function NoAuth(): JSX.Element {
   )
 }
 
+interface JoinRoomProps extends meetSlugLoaderI {
+  slug: string
+}
+
 export function JoinRoom({
   access,
   inSesion,
   admin,
   auth,
-  room
-}: meetSlugLoaderI): JSX.Element {
+  room,
+  slug
+}: JoinRoomProps): JSX.Element {
   if (!auth) return <NoAuth /> // No authentication
   if (!access) return <RequestAccess /> // solicited access
   if (!inSesion) return <WaitingRoom /> // waiting for session to start
   else {
     // in session with access or admin
     return (
-      <>
+      <Form
+        method="post"
+        className="flex flex-col items-center justify-center gap-4"
+      >
         <h3 className="text-black dark:text-white text-2xl sm:text-4xl font-bold">
           ¿Listo para Unirte?
         </h3>
-        <Button size="lg">Unirse</Button>
-      </>
+        <input type="hidden" name="slug" value={slug} />
+        <Button type="submit" size="lg">
+          Unirse
+        </Button>
+      </Form>
     )
   }
 }

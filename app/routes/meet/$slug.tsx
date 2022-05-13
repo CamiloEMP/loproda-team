@@ -8,7 +8,12 @@ import { supabaseClient } from '~/supabase.server'
 import { findOrCreateRoom } from '~/twilio/video/findOrCreate.room'
 import { getToken } from '~/twilio/video/getToken.room'
 import { v4 } from 'uuid'
-
+import type { Room } from 'twilio-video'
+import { connect, ConnectOptions } from 'twilio-video'
+import { useEffect, useState } from 'react'
+import { MeetPreMeet } from '../../components/page/meet.premeet'
+import { MeetInMetting } from '../../components/page/meet.meeting'
+import { MeetPost } from '../../components/page/meet.postmeet'
 export const loader: LoaderFunction = meetSlugLoader
 
 export const action: ActionFunction = async ({ request }) => {
@@ -30,24 +35,28 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export default function MeetSlug(): JSX.Element {
+  const [room, setRoom] = useState<Room>({} as Room)
   const params = useParams()
   const action = useActionData()
   const loader = useLoaderData<meetSlugLoaderI>()
+  useEffect(() => {
+    if (action?.token !== null && action?.token !== undefined) {
+      const room: Room = connect(action?.token, { name: params.slug })
+      setRoom(room) // tal vez funcione pero no se si el token sea valido bota un error cuando uno quiere acceder a las propiedades
+      console.log(room.name) // undefined
+    }
+  }, [action?.token, params.slug])
 
   return (
     <VideoProvider>
-      <div className="text-white"></div>
-      <Form method="post">
-        <input type="hidden" name="slug" value={params.slug} />
-        <button type="submit">obtener token o unirse</button>
-      </Form>
-      {JSON.stringify(action)}
-      {/*
-
-      <MeetPreMeet loader={loader} />
-      <MeetInMetting />
-      <MeetPost />
-  */}
+      {!room.name ? (
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        <MeetPreMeet slug={params.slug!} loader={loader} />
+      ) : (
+        <MeetInMetting />
+      )}
+      {/* <MeetPost /> seria que cuando se salga de la llamada hay si se
+      muestre este componente */}
     </VideoProvider>
   )
 }
